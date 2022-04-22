@@ -18,11 +18,11 @@ describe("<SummaryForm/>", () => {
   test("checkbox enables and disables order button", () => {
     render(<SummaryForm />);
     const termsCheckbox = screen.getByRole("checkbox", {
-      name: "I agree to Terms and Conditions",
+      name: /terms and conditions/i,
     });
 
     const orderButton = screen.getByRole("button", {
-      name: "Confirm order",
+      name: /confirm order/i,
     });
 
     fireEvent.click(termsCheckbox);
