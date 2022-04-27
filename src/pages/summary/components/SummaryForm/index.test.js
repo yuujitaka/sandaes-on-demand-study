@@ -1,4 +1,9 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import SummaryForm from "./";
 
 describe("<SummaryForm/>", () => {
@@ -25,10 +30,27 @@ describe("<SummaryForm/>", () => {
       name: /confirm order/i,
     });
 
-    fireEvent.click(termsCheckbox);
+    userEvent.click(termsCheckbox);
     expect(orderButton).toBeEnabled();
 
-    fireEvent.click(termsCheckbox);
+    userEvent.click(termsCheckbox);
     expect(orderButton).toBeDisabled();
+  });
+
+  test("popover responds to hover", async () => {
+    render(<SummaryForm />);
+
+    const nullPopover = screen.queryByText(/no ice cream/i);
+    expect(nullPopover).not.toBeInTheDocument();
+
+    const terms = screen.getByText(/terms and conditions/i);
+    userEvent.hover(terms);
+
+    const popover = screen.getByText(/no ice cream/i);
+    expect(popover).toBeInTheDocument();
+
+    userEvent.unhover(terms);
+
+    await waitForElementToBeRemoved(() => screen.queryByText(/no ice cream/i));
   });
 });
