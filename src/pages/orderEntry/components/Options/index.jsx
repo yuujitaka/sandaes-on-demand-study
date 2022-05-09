@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 
+import AlertBanner from "../../../../components/AlertBanner";
 import Scoops from "./Scoops";
 import Toppings from "./Toppings";
 
 const Options = ({ optionType }) => {
   const [items, setItems] = useState([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function fetchOptions() {
@@ -16,7 +18,7 @@ const Options = ({ optionType }) => {
         ).data;
         setItems(response);
       } catch (error) {
-        console.log(error);
+        setError(true);
       }
     }
 
@@ -28,6 +30,11 @@ const Options = ({ optionType }) => {
   const optionItems = items.map((item) => (
     <ItemComponent key={item.name} item={item} />
   ));
+
+  if (error)
+    return (
+      <AlertBanner>An unexpected error occured! Please try later</AlertBanner>
+    );
 
   return <Row>{optionItems}</Row>;
 };
