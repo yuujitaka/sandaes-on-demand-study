@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 
-import { useOrder } from "../../../../contexts/order";
-import { pricePerItem } from "../../../../constants";
-import AlertBanner from "../../../../components/AlertBanner";
+import { useOrder } from "../../../contexts/order";
+import { pricePerItem } from "../../../constants";
+import AlertBanner from "../../../components/AlertBanner";
 import Scoops from "./Scoops";
 import Toppings from "./Toppings";
 
 const Options = ({ optionType }) => {
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
-  const [oderDetails, updateItemCount] = useOrder();
+  const [orderDetails, updateItemCount] = useOrder();
 
   useEffect(() => {
     async function fetchOptions() {
@@ -51,7 +51,7 @@ const Options = ({ optionType }) => {
       <h4>{title}</h4>
       <p>{pricePerItem[optionType]} each</p>
       <p>
-        {title} total: {oderDetails.totals[optionType]}
+        {title} total: {orderDetails.totals[optionType]}
       </p>
       <Row>{optionItems}</Row>
     </>
