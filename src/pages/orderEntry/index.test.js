@@ -1,8 +1,13 @@
-import { render, screen, waitFor } from "@testing-library/react";
+// import { render, screen, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+} from "../../test-utils/testing-library-utils";
+
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 
-import { OrderProvider } from "../../contexts/order";
 import { server } from "../../mocks/server";
 import OrderEntry from "./";
 import Options from "./components/Options";
@@ -17,7 +22,7 @@ test("handles error for scoops and toppings routes", async () => {
     )
   );
 
-  render(<OrderEntry />, { wrapper: OrderProvider });
+  render(<OrderEntry />);
 
   //waitFor is not necessary sometimes
   await waitFor(async () => {
@@ -28,7 +33,7 @@ test("handles error for scoops and toppings routes", async () => {
 });
 
 test("update scoop subtotal when scoops change", async () => {
-  render(<Options optionType="scoops" />, { wrapper: OrderProvider });
+  render(<Options optionType="scoops" />);
 
   const scoopSubtotal = screen.getByText("Scoops total: $", { exact: false });
   expect(scoopSubtotal).toHaveTextContent("0.00");
