@@ -1,8 +1,11 @@
 import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
-import { server } from "../../mocks/server";
 
+import { OrderProvider } from "../../contexts/order";
+import { server } from "../../mocks/server";
 import OrderEntry from "./";
+import Options from "./components/Options";
 
 test("handles error for scoops and toppings routes", async () => {
   server.resetHandlers(
@@ -14,7 +17,7 @@ test("handles error for scoops and toppings routes", async () => {
     )
   );
 
-  render(<OrderEntry />);
+  render(<OrderEntry />, { wrapper: OrderProvider });
 
   //waitFor is not necessary sometimes
   await waitFor(async () => {
@@ -22,4 +25,25 @@ test("handles error for scoops and toppings routes", async () => {
 
     expect(alerts).toHaveLength(2);
   });
+});
+
+test("update scoop subtotal when scoops change", async () => {
+  render(<Options optionType="scoops" />, { wrapper: OrderProvider });
+
+  const scoopSubtotal = screen.getByText("Scoops total: $", { exact: false });
+  expect(scoopSubtotal).toHaveTextContent("0.00");
+
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "1");
+  expect(scoopSubtotal).toHaveTextContent("2.00");
+
+  const chocolateInput = await screen.findByRole("spinbutton", {
+    name: "Chocolate",
+  });
+  userEvent.clear(chocolateInput);
+  userEvent.type(chocolateInput, "2");
+  expect(scoopSubtotal).toHaveTextContent("6.00");
 });

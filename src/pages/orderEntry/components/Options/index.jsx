@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 
+import { useOrder } from "../../../../contexts/order";
+import { pricePerItem } from "../../../../constants";
 import AlertBanner from "../../../../components/AlertBanner";
 import Scoops from "./Scoops";
 import Toppings from "./Toppings";
@@ -9,6 +11,7 @@ import Toppings from "./Toppings";
 const Options = ({ optionType }) => {
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
+  const [oderDetails, updateItemCount] = useOrder();
 
   useEffect(() => {
     async function fetchOptions() {
@@ -26,9 +29,16 @@ const Options = ({ optionType }) => {
   }, [optionType]);
 
   const ItemComponent = optionType === "scoops" ? Scoops : Toppings;
+  const title = optionType[0].toUpperCase() + optionType.slice(1).toLowerCase();
 
   const optionItems = items.map((item) => (
-    <ItemComponent key={item.name} item={item} />
+    <ItemComponent
+      key={item.name}
+      item={item}
+      updateItemCount={(itemName, newItemCount) =>
+        updateItemCount(itemName, newItemCount, optionType)
+      }
+    />
   ));
 
   if (error)
@@ -36,7 +46,16 @@ const Options = ({ optionType }) => {
       <AlertBanner>An unexpected error occured! Please try later</AlertBanner>
     );
 
-  return <Row>{optionItems}</Row>;
+  return (
+    <>
+      <h4>{title}</h4>
+      <p>{pricePerItem[optionType]} each</p>
+      <p>
+        {title} total: {oderDetails.totals[optionType]}
+      </p>
+      <Row>{optionItems}</Row>
+    </>
+  );
 };
 
 export default Options;

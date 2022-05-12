@@ -1,8 +1,17 @@
 import "./App.css";
-import SummaryForm from "./pages/summary/components/SummaryForm";
+import Container from "react-bootstrap/Container";
+
+import { OrderProvider } from "./contexts/order";
+import OrderEntry from "./pages/orderEntry";
 
 function App() {
-  return <SummaryForm />;
+  return (
+    <Container>
+      <OrderProvider>
+        <OrderEntry />
+      </OrderProvider>
+    </Container>
+  );
 }
 
 export default App;
