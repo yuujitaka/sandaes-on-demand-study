@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button, Form, Popover, OverlayTrigger } from "react-bootstrap";
+
+import { PhaseContext } from "../../../contexts/phase";
 
 const SummaryForm = () => {
   const [isChecked, setIsChecked] = useState(false);
+  const { setPhase } = useContext(PhaseContext);
 
   const popover = (
     <Popover id="popover-basic">
@@ -25,7 +28,9 @@ const SummaryForm = () => {
         onChange={(e) => setIsChecked(e.target.checked)}
       />
 
-      <Button disabled={!isChecked}>Confirm order</Button>
+      <Button disabled={!isChecked} onClick={() => setPhase(3)}>
+        Confirm order
+      </Button>
     </Form>
   );
 };
