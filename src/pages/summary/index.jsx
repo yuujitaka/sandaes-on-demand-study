@@ -20,12 +20,17 @@ const Summary = () => {
         ))}
       </ul>
 
-      <h2>Toppings: {orderDetails.totals.toppings}</h2>
-      <ul>
-        {toppings.map(([key]) => (
-          <li key={key}>{key}</li>
-        ))}
-      </ul>
+      {!!toppings.length && (
+        <>
+          <h2>Toppings: {orderDetails.totals.toppings}</h2>
+          <ul>
+            {toppings.map(([key]) => (
+              <li key={key}>{key}</li>
+            ))}
+          </ul>
+        </>
+      )}
+
       <SummaryForm />
     </div>
   );
