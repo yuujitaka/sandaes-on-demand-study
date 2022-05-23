@@ -101,3 +101,21 @@ describe("grand total", () => {
     expect(grandTotal).toHaveTextContent("2.00");
   });
 });
+
+test("Disable order button for no scoops", async () => {
+  render(<OrderEntry />);
+
+  const orderButton = screen.getByRole("button", { name: /order summary/i });
+  expect(orderButton).toBeDisabled();
+
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "1");
+  expect(orderButton).toBeEnabled();
+
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "0");
+  expect(orderButton).toBeDisabled();
+});

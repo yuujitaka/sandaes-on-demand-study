@@ -74,3 +74,17 @@ test("update toppings subtotal when toppings change", async () => {
   userEvent.click(mmsCheckbox);
   expect(toppingsSubtotal).toHaveTextContent("1.50");
 });
+
+test("don't update total if scoops input is invalid", async () => {
+  render(<Options optionType="scoops" />);
+
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "-1");
+
+  const scoopSubtotal = screen.getByText("Scoops total: $", { exact: false });
+  expect(scoopSubtotal).toHaveTextContent("0.00");
+});
